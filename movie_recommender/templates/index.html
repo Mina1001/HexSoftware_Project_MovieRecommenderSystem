@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamFlix - Movie Recommender</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #141414;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #181818;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+        }
+        h1 {
+            color: #E50914; /* Netflix Red */
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 35px;
+        }
+        select {
+            flex: 1;
+            padding: 12px;
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #E50914;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #f40612;
+        }
+        .section-title {
+            font-size: 20px;
+            border-bottom: 2px solid #E50914;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .movie-card {
+            background-color: #2f2f2f;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #E50914;
+            transition: transform 0.2s ease;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+        .movie-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .movie-genre {
+            font-size: 12px;
+            color: #E50914;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .match-badge {
+            display: inline-block;
+            background-color: #46d369;
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .movie-overview {
+            font-size: 13px;
+            color: #cccccc;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎬 StreamFlix AI</h1>
+    <p class="subtitle">Content-Based Movie Recommendation Engine</p>
+
+    <form action="/recommend" method="POST" class="search-box">
+        <select name="movie_title" required>
+            <option value="" disabled selected>Select a movie you like...</option>
+            {% for movie in movie_list %}
+                <option value="{{ movie }}" {% if movie == selected_movie %}selected{% endif %}>{{ movie }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">🍿 Get Recommendations</button>
+    </form>
+
+    {% if selected_movie %}
+        <div class="section-title">
+            Because you liked <span style="color: #E50914;">"{{ selected_movie }}"</span>, you might enjoy:
+        </div>
+
+        <div class="movie-grid">
+            {% for rec in recommendations %}
+                <div class="movie-card">
+                    <div class="movie-title">{{ rec.title }}</div>
+                    <div class="movie-genre">{{ rec.genre }}</div>
+                    <div class="match-badge">{{ rec.match }} Match</div>
+                    <div class="movie-overview">{{ rec.overview }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
